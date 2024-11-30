@@ -1,9 +1,11 @@
 # brownian_zeros
 Simulating zeros of Brownian motion
+## Splitting an interval terminated by zeros
+Example code for recursively simulating the zeros of a standary one-dimensional Brownian bridge with $W_0=W_1=0$, by finding the last zero before the midpoint, and the first zero after.
 
-Example code for recursively simulating the zeros of a standary one-dimensional Brownian bridge with $W_0=W_1=0$.
+![Finding the last zero crossing before the midpoint, and the first crossing after](./figs/illustration.png)
 
-A sampling formula for the last zero crossing before $1/2$, i.e $W_{\tau_{\textrm{-}}}=0$ with $0 < \tau_{\textrm{-}} < 1/2$ can be found in link,
+A sampling formula for the last zero crossing before $1/2$, i.e $W_{\tau_{\textrm{-}}}=0$ with $0 < \tau_{\textrm{-}} < 1/2$ can be found as (derivation [pdf](./brownian_zeros.pdf)),
 ```math
 \tau_{\textrm{-}} = \frac{\sin^2 \left( \frac{\pi}{2} U_1 \right)}{1+\sin^2 \left( \frac{\pi}{2} U_1 \right)}
 ```
