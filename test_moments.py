@@ -28,7 +28,7 @@ m2 = (a**1.5 - (a+2)*np.sqrt(1-a) + 2)/(3)
 print('<t-,t+> %.7f numerically %.7f'%(m2, np.inner(np.transpose(tp), tm).mean()/n), tmtp.mean(), (av_tp_given_tm*tm).mean())
 
 # sin integral
-ds = a / (n)
+ds = a / n
 s = (0.5 + np.arange(n)) * ds
 v = (1/np.pi)*(np.sqrt(s)*np.arcsin(np.sqrt((1-a)/(1-s))))
 print('sin integral', v.sum()*ds, (np.sqrt(1-a)+0.5*a*np.sqrt(1-a)+a**1.5-1)/3)
