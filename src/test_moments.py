@@ -26,6 +26,8 @@ print(tmtp.shape)
 
 m2 = (a**1.5 - (a+2)*np.sqrt(1-a) + 2)/(3)
 print('<t-,t+> %.7f numerically %.7f'%(m2, np.inner(np.transpose(tp), tm).mean()/n), tmtp.mean(), (av_tp_given_tm*tm).mean())
+print('Median t-', a/(2-a), np.median(tm))
+print('Median t+', 2*a/(1+a), np.median(tp.ravel()))
 
 # sin integral
 ds = a / n
@@ -45,3 +47,6 @@ print('Covariance <(t+ - <t+>)(t- - <t->)>', covar, ((av_tp_given_tm - tp_m1)*(t
 print('Pearson correlation coefficient')
 correl = (2/3)*(1-a**0.5 - (1-a)**0.5)/((a*(1-a))**0.25)
 print('Correl <(t+ - <t+>)(t- - <t->)>/sqrt(<(t+ - <t+>)^2><(t- - <t->)^2>', correl, ((av_tp_given_tm - tp_m1)*(tm-m1)).mean()/np.sqrt(((tm-m1)*(tm-m1)).mean() *np.square(tp-tp_m1).mean()))
+
+
+print('Correl a=0.5, corr= (8**0.5 - 4)/3', (8**0.5-4)/3)

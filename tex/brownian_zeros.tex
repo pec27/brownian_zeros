@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{amsfonts}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{float}
+
+\newcommand{\tm}{{\tau_{\mathrm{-}}}}
+\newcommand{\tp}{{\tau_{\mathrm{+}}}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Med}{\mathrm{Med}}
+
+\title{The Brownian Split method of Sampling Zeros of a Wiener Process}
+\author{Peter E. Creasey \\
+  \href{https://orcid.org/0000-0002-4049-4928}{ORCID:0000-0002-4049-4928}}
+
+\date{November 2024}
+
+\begin{document}
+
+
+\maketitle
+
+\section{Introduction}
+
+The typical methods of simulating a one dimensional Brownian motion $W_t$ are either forward simulation, or constrained simulation such as Brownian bridges, excursions and meanders. One does not usually simulate the zeros, due to their unbounded density.
+
+Here we describe the Brownian ``split'', which takes an interval terminated by zeros (i.e. a Brownian bridge between two zeros) and samples the last zero before the midpoint, and the first zero after. In such a way we may recursively bisect zero-terminated intervals down to any required length.
+
+W.l.o.g. let us consider a one dimensional random walk $W_t$, $t\in [0,1]$ whose endpoints are constrained to be $W_0=W_1=0$ (i.e. a Brownian bridge over the unit interval) and define $\tm,\tp$ to be the last zero before the midpoint and the first zero after, respectively. A method of jointly sampling $\tm,\tp$ is given by
+\begin{eqnarray}
+\tm &=& \frac{\sin^2 \left( \frac{\pi}{2} U_1 \right)}{1+\sin^2 \left( \frac{\pi}{2} U_1 \right)} \in \left(0,\frac{1}{2}\right) \label{eq:stm} \\
+\tp &=& \frac{1-2\tm + \tm U_2^2}{1-2\tm+\;\;\;\;U_2^2} \in \left(\frac{1}{2},1\right)  \label{eq:stp}
+\end{eqnarray}
+where $U_1,U_2$ are uniformly distributed random variables over $(0,1)$.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\columnwidth]{figs/illustration.png}
+\caption{Illustration of finding the last zero crossing ($\tm$) before the midpoint, and the first crossing after ($\tp$)}
+\end{figure}
+
+Some points of note are
+\begin{itemize}
+    \item{By construction $W_t$ forms a Brownian bridge over $[0,\tm]$, a positive/negative Brownian excursion over $[\tm,\tp]$, and then a Brownian bridge over $[\tp,1]$.}
+    \item{The crossings $\tm$ and $1-\tp$ are identically distributed (but not independent). The median $\tp$ is $2/3$, and the mean is $\sqrt{1/2}$.}
+    \item{The Pearson correlation between these two variables is $-4/3 + \sqrt{8/9} \approx -0.39052$. This negative correlation can be intuitively understood by the clustering of zeros: a zero shortly before the midpoint (i.e. a large $\tm$) significantly increases the chances of a zero shortly after the midpoint (a small $\tp$), and vice-versa.}
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{figs/sample.png}
+\caption{Example distributions of zeros (intervals recursively split until they are $<0.001\%$ of the original interval) using the sampling method in Eqns (\ref{eq:stm}-\ref{eq:stp})}
+\end{figure}
+
+\subsection{Brownian Split derivation}
+We derive the above results, with a more general splitting point $\alpha \in (0,1)$.
+
+The reflection property of Brownian motion gives us the probability density w.r.t. $t$ of first crossing a barrier at $w$ as
+\begin{equation}
+\rho(\textrm{f.c.\;}W_t=w) = \frac{|w|}{t}\phi\left(w;t\right)
+\end{equation}
+where $\phi(x;\sigma^2)$ is the density of the normal distribution of zero mean and variance $\sigma^2$. By symmetry we have the distribution of last crossing of $0$ at $\tm<\alpha$, s.t. $W_\alpha=w$,
+\begin{equation}
+\rho(\tm|w) = \frac{|w|\alpha}{\tm(\alpha-\tm)}\phi\left(w;\frac{\alpha(\alpha-\tm)}\tm\right)\,.
+\end{equation}
+Now let us consider the Brownian bridge constraint $W_1=0$, i.e. the density of $W_\alpha=w$
+\begin{equation}
+\rho(w) = \phi\left(w;\alpha(1-\alpha)\right)
+\end{equation}
+Combining we find the joint probability density of $\tm,w$ as
+\begin{equation}\label{eq:lw}
+  \rho(\tm,w) = \frac{|w|}{\alpha - \tm} \frac{1}{\sqrt{2 \pi (1-\tm)\tm}}\phi\left(w;\frac{(\alpha-\tm)(1-\alpha)}{1-\tm}\right)
+\end{equation}
+
+and by integration over $w$
+\begin{equation}\label{eq:tm}
+\rho(\tm) = \frac{1}{\pi(1-\tm)}\sqrt{\frac{1-\alpha}{\tm(\alpha-\tm)}}
+\end{equation}
+(As a sanity-check, we can repeat steps (\ref{eq:lw}-\ref{eq:tm}) replacing the Brownian bridge density with the standard density and we recover a L\'evy arcsine law). 
+
+Integrating to find the c.d.f. 
+\begin{equation}
+\mathbb{P}(\textrm{l.c.\;}0\textrm{\;before\;}\tm) = \frac{2}{\pi}\tan^{-1}\sqrt{\frac{\tm(1-\alpha)}{\alpha-\tm}}
+\end{equation}
+which can be inverted to find a sampling method
+\begin{equation}\label{eq:tm_sample}
+\tm = \frac{\alpha \sin^2 \left( \frac{\pi}{2} U_1 \right)}{1-\alpha+\alpha \sin^2 \left( \frac{\pi}{2} U_1 \right)} \in \left(0,\alpha\right)
+\end{equation}
+whose mean, median and variance is
+\begin{eqnarray}
+\mathbb{E}\left[\tm\right] &=& 1-\sqrt{1-\alpha} \\
+\Var\left[\tm\right] &=& \frac{1}{2}\sqrt{1-\alpha}\left(1-\sqrt{1-\alpha}\right)^2 \\
+\Med\left[\tm\right] &=&  \frac{\alpha}{2-\alpha} \, .
+\end{eqnarray}
+By symmetry for $\tp$ we have
+\begin{eqnarray}
+\mathbb{E}\left[\tp\right] &=& \sqrt{\alpha} \\
+\Var\left[\tp\right] &=& \frac{1}{2}\sqrt{\alpha}\left(1-\sqrt{\alpha}\right)^2  \\
+\Med\left[\tp\right] &=& \frac{2\alpha}{1+\alpha}  \, .
+\end{eqnarray}
+
+Let us find the distribution of the first crossing $\tp$ of zero after $\alpha$ given $W_1=0$,
+\begin{equation}
+\rho(\tp|w) =  \frac{|w|(1-\alpha)}{(\tp-\alpha)(1-\tp)} \phi\left(w;\frac{(\tp-\alpha)(1-\alpha)}{1-\tp}\right)
+\end{equation}
+and combine with Eq.~(\ref{eq:lw}) to find the joint density
+\begin{equation}\label{eq:lwf}
+\rho(\tm,w,\tp) = \frac{w^2}{2\pi} \frac{\phi\left(w;\frac{(\alpha-\tm)(\tp-\alpha)}{\tp-\tm}\right)}{(\alpha-\tm)(\tp-\alpha)\sqrt{\tm(1-\tp)(\tp-\tm)}} 
+\end{equation}
+and integrate over $w$ to find
+\begin{equation}
+\rho(\tm,\tp) = \frac{1}{2\pi \sqrt{\tm(1-\tp)(\tp-\tm)^3}}
+\end{equation}
+then
+\begin{equation}
+\rho(\tp|\tm) = \frac{1-\tm}{2} \sqrt{\frac{\alpha-\tm}{(1-\tp)(1-\alpha)(\tp-\tm)^3}}
+\end{equation}
+and integrate to the c.d.f.
+\begin{equation}
+\mathbb{P}(\textrm{f.c.\;}0\textrm{\;before\;}\tp|\tm) = \sqrt{\frac{(\alpha-\tm)(1-\tp)}{(1-\alpha)(\tp-\tm)}}
+\end{equation}
+to give a sampling formula
+\begin{equation}\label{eq:tp_sample}
+\tp =  \frac{\alpha - \tm + \tm (1-\alpha) U_2^2}{\alpha - \tm +\;\;\;\; (1-\alpha)U_2^2} \in \left(1-\alpha,1\right) \, .
+\end{equation}
+For the correlation we must perform a (fairly unpleasant) integral to find the moment
+\begin{equation}\label{eq:tptm}
+ \mathbb{E} \left[\tm\tp\right] =  \frac{1}{3} \left(2 + \alpha^{3/2} - \left(\alpha+2\right)\sqrt{1-\alpha}\right)
+\end{equation}
+which gives Pearson correlation coefficient
+\begin{equation}\label{eq:corr}
+ \mathrm{Corr} \left[\tm,\tp\right] =  \frac{2}{3} \frac{\left(1-\sqrt{\alpha}-\sqrt{1-\alpha}\right)}{\alpha^{1/4}\left(1-\alpha\right)^{1/4}}
+\end{equation}
+
+By splitting at the midpoint $\alpha=1/2$ into Eqs.~(\ref{eq:tm_sample}),(\ref{eq:tp_sample}) we recover the formulae in Eqs.~(\ref{eq:stm}-\ref{eq:stp}).
+
+\end{document}
