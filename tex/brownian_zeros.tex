@@ -54,12 +54,12 @@ Some points of note are
 \subsection{Brownian Split derivation}
 We derive the above results, with a more general splitting point $\alpha \in (0,1)$. The approach here is to introduce the auxiliary variable $w=W_\alpha$, and then integrate over all $w$.
 
-Let us the first crossing of zero after $\alpha$ \emph{without} the constraint at $W_1=0$, i.e.  $\tp = \inf_t \{W_t = 0 : W_\alpha = w, t\geq \alpha\}$. The standard result is
+Let us define $\tp$ to be the first crossing of zero after $\alpha$. The barrier-hitting probability density of a walk starting at $W_\alpha=w$ \emph{without} the constraint at $W_1=0$ is given by the standard
 \begin{equation}
 \rho\left(\tp | W_\alpha=w\right) = \frac{|w|}{\tp - \alpha}\phi\left(w;\tp - \alpha \right) \, .
 \end{equation}
 where $\phi(x;\sigma^2)$ is the density of the normal distribution of zero mean and variance $\sigma^2$.
-The density of arrival at $W_1=0$ is given by $\rho\left(W_1=0|W_\alpha=w\right) = \phi(w;1-\alpha)$ and so by Bayes' theorem we have
+The density of arrival at $W_1=0$ is given by $\rho\left(W_1=0|W_\alpha=w\right) = \phi(w;1-\alpha)$, and similarly $\rho\left(W_1=0|\tp,W_\alpha=w\right) = \phi(0;1-\tp)$ (using the Markov property), and so by Bayes' theorem we have
 \begin{eqnarray}
   \rho\left(\tp | W_\alpha=w,W_1=0\right) &=& \frac{\rho(W_1=0|\tp,W_\alpha=w) \rho(\tp|W_\alpha=w)}{\rho(W_1=0|W_\alpha=w)} \\
 &=&    \frac{|w|(1-\alpha)}{(\tp-\alpha)(1-\tp)}\phi\left(w;\frac{(1-\alpha)(\tp-\alpha)}{1-\tp}\right) \label{eq:tp_given_w} \,.
