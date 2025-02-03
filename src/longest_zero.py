@@ -229,6 +229,8 @@ def F3(r):
     
     B =  -(3*r+1)/(r*sqrt(r)) + 8*sqrt(1-2*r)/r  + 8*arccos(r/(1-r)) - 8*arcsin((1-3*r)/(1-r)) / sqrt(r)
 
+    B =  -(3*r+1)/(r*sqrt(r)) + 8*sqrt(1-2*r)/r  + 8*arccos(r/(1-r)) - 8*(pi/2 - 2*arcsin(sqrt(r/(1-r)))) / sqrt(r)
+
     B = -2/sqrt(r)+ (1/pi)*B
     
     

@@ -80,7 +80,7 @@ and we can integrate over $w$ as
 (As an exercise for the reader, if we remove the Brownian bridge constraint $W_1=0$ and repeat this process we recover a L\'evy arcsine law).
 Integrating we can find the CDF
 \begin{equation}
-\textrm{CDF}\left(\tp | W_1=0 \right) = \frac{2}{\pi}\tan^{-1}\sqrt{\frac{\tp-\alpha}{\alpha(1-\tp)}}
+\textrm{CDF}\left(\tp | W_1=0 \right) = \frac{2}{\pi}\sin^{-1}\sqrt{\frac{\tp-\alpha}{(1-\alpha)\tp}}
 \end{equation}
 which can be inverted to find a sampling formula
 \begin{equation}\label{eq:tp_sample}
@@ -135,5 +135,52 @@ which gives Pearson correlation coefficient
 
 By splitting at the midpoint $\alpha=1/2$ into Eqs.~(\ref{eq:tp_sample}),(\ref{eq:tm_sample}) we recover the formulae in Eqs.~(\ref{eq:stp}-\ref{eq:stm}).
 
-An interesting point about (\ref{eq:tm_and_tp}) is to view it as the density of interval lengths $\tp-\tm$. If $\tp-\tm > 1/2$ then this must be the largest interval between zeros, and integrates (over the remain parameter $\tm$ or $\tp$) to give CDF $2-(\tp-\tm)^{-1/2}$, a result due Ros\'en (via Wendel~1964). 
+An interesting point about (\ref{eq:tm_and_tp}) is to view it as the density of interval lengths $\tp-\tm$. If $\tp-\tm > 1/2$ then this must be the largest interval between zeros, and integrates (over the remain parameter $\tm$ or $\tp$) to give CDF $2-(\tp-\tm)^{-1/2}$, a result due Ros\'en (via Wendel~1964).
+
+\section{WIP Longest zero}
+%     ana_integ = (2/(pi*sqrt(r)))*arcsin(r/(1-r)) + (2/pi)*arccos((3*r-1)/(1-r)) - sqrt(2)    
+
+\begin{eqnarray}
+  C^1_{\frac{1}{2}}(r) &=& \frac{1}{\sqrt{r}} - 1 \\
+  C^{\frac{1}{2}}(r) &=& \frac{2}{\pi} \left[ \frac{1}{\sqrt{r}} \sin^{-1}\left(\frac{r}{1-r}\right) + \sin^{-1}\left(\frac{2-4r}{1-r}\right) \right] - \sqrt{2} 
+\end{eqnarray}
+
+%    lim1 =  (2/pi)*(1/sqrt(r)- 1)*(arccos((3*r-1)/(1-r)) + arccos(r/(1-r))) +\
+%        (1/(pi*r))*(-2*sqrt(1-2*r)) 
+\begin{eqnarray}
+  2L+LR &=& \frac{2}{\pi} \left[ \left( \frac{1}{\sqrt{r}} -1\right)\left(\sin^{-1}\left(\frac{2-4r}{1-r}\right) + \cos^{-1}\left(\frac{r}{1-r}\right)\right) - \right. \\
+    && \left. \frac{1}{r}\sqrt{\left(1-2r\right)} \right]
+\end{eqnarray}
+Giving
+%     tot_sum = (2/pi)*((1/sqrt(r))*arccos((3*r-1)/(1-r)) - arccos(r/(1-r))) +\
+%        (1/(pi*r))*(-2*sqrt(1-2*r)) + 1/sqrt(r)  - sqrt(2)    
+
+\begin{eqnarray}
+  \bar{F^{1}_{\frac{1}{2}}}(r) &=& \frac{2}{\pi} \left[ \frac{1}{\sqrt{r}}\sin^{-1}\left(\frac{2-4r}{1-r}\right) - \cos^{-1}\left(\frac{r}{1-r}\right) - \right. \\
+    && \left. \frac{1}{r}\sqrt{\left(1-2r\right)} \right] + \frac{1}{\sqrt{r}} - 1
+\end{eqnarray}
+
+\subsection{Wendel's moments}
+\begin{equation}
+  M^\star_0(r) = 1
+\end{equation}
+Wendel theorem 5 is
+\begin{equation}
+  M^\star_{n+1}(r) = \int_0^{1-r} {\rm d}x M^\star_n\left(\frac{r}{x}\right) f^\star_{x+r}(x), \; 0<r<1
+\end{equation}
+however due to the fact that $M^\star_{n}$ defined to be zero for $rn>1$, the upper limit of $r$ should be $0<r<\frac{1}{n+1}$, and for substitution purposes we should re-label the lower limit of the integral to $nr$, i.e.
+\begin{equation}
+  M^\star_{n+1}(r) = \int_{nr}^{1-r} {\rm d}x M^\star_n\left(\frac{r}{x}\right) f^\star_{x+r}(x), \; 0<r<\frac{1}{n+1}
+\end{equation}
+By susbstitution we can easily get the 1st n
+\begin{equation}
+  M^\star_1(r) = \frac{1}{\sqrt{r}} - 1
+\end{equation}
+For the second $n$ we get
+\begin{equation}
+  M^\star_2(r) = 1-\frac{2}{\sqrt{r}} - \frac{2}{\pi}\left[\frac{2}{\sqrt{r}} \sin^{-1} \sqrt{\frac{r}{1-r}} - \sin^{-1}\frac{r}{1-r} + \frac{\sqrt{1-2r}}{r}\right]
+\end{equation}
+for $r<1/2$
+
+
 \end{document}
