@@ -139,7 +139,7 @@ def plot():
     pl.plot(r,dens)
     pl.show()
 
-def test_F2():
+def test_F2_plot():
     print("F2 (TODO currently complementary of) the CDF between 1/3 and 1/2")
     plot() 
     
@@ -187,6 +187,23 @@ def numerical_CDF_F3(r, np,nm):
     F3 = (c * p_lr).sum() * du1*du2
     return F3
 
+def numerical_CDF_F2(r, np,nm):
+    tp, tm,du1,du2 = get_tp_tm(np,nm,0)
+    # Prob that left is < r
+    p_left = where(tm > r, 2-sqrt(tm/r), 1)
+    # Prob that right is < r
+    p_right = where(1-tp > r, 2-sqrt((1-tp)/r), 1)
+
+    # Prob both
+    p_lr = p_left*p_right
+    # Width of central
+    c = tp-tm
+    c = where(c < r, 1, 0)
+
+    # No need for prob dens since we are sampling from CDF
+    F2 = (c * p_lr).sum() * du1*du2
+    return F2
+
 def integ(f, x_min,x_max, n=2000000):
     dx = (x_max-x_min)/n
     x = x_min + (0.5 + arange(n))*dx
@@ -227,15 +244,21 @@ def F3(r):
     print('1d integral', integ1d)
 
     
-    B =  -(3*r+1)/(r*sqrt(r)) + 8*sqrt(1-2*r)/r  + 8*arccos(r/(1-r)) - 8*arcsin((1-3*r)/(1-r)) / sqrt(r)
+    B =  -(3*r+1)/(r*sqrt(r)) + 8*sqrt(1-2*r)/r  + 8*arccos(r/(1-r)) -16*arccos(sqrt(r/(1-r))) / sqrt(r)
 
-    B =  -(3*r+1)/(r*sqrt(r)) + 8*sqrt(1-2*r)/r  + 8*arccos(r/(1-r)) - 8*(pi/2 - 2*arcsin(sqrt(r/(1-r)))) / sqrt(r)
-
-    B = -2/sqrt(r)+ (1/pi)*B
+    B = 2/sqrt(r)+ (1/pi)*B
     
     
     print('Alt', B)
     return integ1d
+
+def F2(r):
+    
+    tot_sum = 2 - ((2/pi)*((1/sqrt(r))*arccos((3*r-1)/(1-r)) - arccos(r/(1-r))) + (1/(pi*r))*(-2*sqrt(1-2*r))) - 1/sqrt(r)
+    tot_sum = 2 - 3/sqrt(r) + ((2/pi)*((2/sqrt(r))*arcsin(sqrt(r/(1-r))) + arccos(r/(1-r)) + (1/r)*sqrt(1-2*r)))
+    tot_sum = 2 - 1/sqrt(r) + (2/pi)*(-(2/sqrt(r))*arccos(sqrt(r/(1-r))) + arccos(r/(1-r)) + (1/r)*sqrt(1-2*r))
+
+    return tot_sum
 
 def test_F3():
     print("F3(r) CDF for r in 1/4 to 1/3")
@@ -243,7 +266,16 @@ def test_F3():
     np,nm=(4000,3999)
     print('F3(%f)='%(r),numerical_CDF_F3(r,np,nm))
     print('Analytic', F3(r))
+
+def test_F2():
+    print("F2(r) CDF for r in 1/3 to 1/2")
+    r = 0.39
+    np,nm=(4000,3999)
+    print('F2(%f)='%(r),numerical_CDF_F2(r,np,nm))
+    print('Analytic', F2(r))
+    
 if __name__=='__main__':
-#    test_F2()
-    test_F3()
+#    test_F2_plot()
+    test_F2()
+#    test_F3()
     

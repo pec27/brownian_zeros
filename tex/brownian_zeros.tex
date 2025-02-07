@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{amsfonts}
 \usepackage{graphicx} % Required for inserting images
@@ -137,50 +138,84 @@ By splitting at the midpoint $\alpha=1/2$ into Eqs.~(\ref{eq:tp_sample}),(\ref{e
 
 An interesting point about (\ref{eq:tm_and_tp}) is to view it as the density of interval lengths $\tp-\tm$. If $\tp-\tm > 1/2$ then this must be the largest interval between zeros, and integrates (over the remain parameter $\tm$ or $\tp$) to give CDF $2-(\tp-\tm)^{-1/2}$, a result due Ros\'en (via Wendel~1964).
 
-\section{WIP Longest zero}
-%     ana_integ = (2/(pi*sqrt(r)))*arcsin(r/(1-r)) + (2/pi)*arccos((3*r-1)/(1-r)) - sqrt(2)    
+\section{WIP Longest interval between zeros}
 
+An interesting use of the above formalism is to find the longest interval between zeros. Let us denote the cumulative probability that this longest interval $<r$ as $F(r)$. Let us then divide the domain of $r$ into intervals between the fractions $\frac{1}{n}$ and $\frac{1}{n+1}$ as $Q_n(r)$, i.e.
+\begin{equation}
+  F(r) = Q_n(r), \; r\in \left[ \frac{1}{n+1},\frac{1}{n}\right)
+\end{equation}
+and by convention take $Q_0=1$. For $r \in [1/2,1]$ we may use the sampling of $\tm, \tp$ and observe that
 \begin{eqnarray}
-  C^1_{\frac{1}{2}}(r) &=& \frac{1}{\sqrt{r}} - 1 \\
-  C^{\frac{1}{2}}(r) &=& \frac{2}{\pi} \left[ \frac{1}{\sqrt{r}} \sin^{-1}\left(\frac{r}{1-r}\right) + \sin^{-1}\left(\frac{2-4r}{1-r}\right) \right] - \sqrt{2} 
+  \mathbb{P}\left( \tp - \tm > 1 \right) &=& \int_0^{1-r} {\rm d}\tm \int_{\tm+r}^1 {\rm d}\tp \rho(\tm, \tp) \nonumber 
 \end{eqnarray}
-
-%    lim1 =  (2/pi)*(1/sqrt(r)- 1)*(arccos((3*r-1)/(1-r)) + arccos(r/(1-r))) +\
-%        (1/(pi*r))*(-2*sqrt(1-2*r)) 
+and hence
+\begin{equation}
+  Q_1(r) = 2 - \sqrt{\frac{1}{r}} \, . 
+\end{equation}
+We can then use a divide-and-conquer method to construct further $Q_n$ for $n>=2$ using the scale-invariance of the bridges between $[0,\tm]$ and $[\tp,1]$ to give
 \begin{eqnarray}
-  2L+LR &=& \frac{2}{\pi} \left[ \left( \frac{1}{\sqrt{r}} -1\right)\left(\sin^{-1}\left(\frac{2-4r}{1-r}\right) + \cos^{-1}\left(\frac{r}{1-r}\right)\right) - \right. \\
-    && \left. \frac{1}{r}\sqrt{\left(1-2r\right)} \right]
+  Q_{n}(r) &=& \int_{\frac{1}{2}-r}^{\frac{1}{2}} {\rm d}\tm \int_{\frac{1}{2}}^{\tm+r} {\rm d}\tp F\left(\frac{r}{\tm}\right)F\left(\frac{r}{1-\tp}\right) \rho(\tm,\tp) \nonumber 
 \end{eqnarray}
-Giving
-%     tot_sum = (2/pi)*((1/sqrt(r))*arccos((3*r-1)/(1-r)) - arccos(r/(1-r))) +\
-%        (1/(pi*r))*(-2*sqrt(1-2*r)) + 1/sqrt(r)  - sqrt(2)    
-
+which for odd and even $n$ gives (should add diagram)
 \begin{eqnarray}
-  \bar{F^{1}_{\frac{1}{2}}}(r) &=& \frac{2}{\pi} \left[ \frac{1}{\sqrt{r}}\sin^{-1}\left(\frac{2-4r}{1-r}\right) - \cos^{-1}\left(\frac{r}{1-r}\right) - \right. \\
-    && \left. \frac{1}{r}\sqrt{\left(1-2r\right)} \right] + \frac{1}{\sqrt{r}} - 1
+  Q_{2n}(r) &=& 2 \int_{nr}^{\frac{1}{2}} {\rm d}\tm \int_{1-nr}^{\tm+r} {\rm d}\tp Q_{2n-1}\left(\frac{r}{\tm}\right)Q_{2n-2}\left(\frac{r}{1-\tp}\right)\rho(\tm,\tp) + \nonumber \\
+  && \int_{nr}^{\frac{1}{2}} {\rm d}\tm \int_{\frac{1}{2}}^{1-nr} {\rm d}\tp Q_{2n-1}\left(\frac{r}{\tm}\right)Q_{2n-1}\left(\frac{r}{1-\tp}\right)\rho(\tm,\tp) + \nonumber \\
+  && \int_{1-(n+1)r}^{nr} {\rm d}\tm \int_{1-nr}^{\tm+r} {\rm d}\tp Q_{2n-2}\left(\frac{r}{\tm}\right)Q_{2n-2}\left(\frac{r}{1-\tp}\right)\rho(\tm,\tp) + \nonumber \\
 \end{eqnarray}
+and
+\begin{eqnarray}
+  Q_{2n+1}(r) &=& 2 \int_{\frac{1}{2}-r}^{nr} {\rm d}\tm \int_{\frac{1}{2}}^{\tm+r} {\rm d}\tp Q_{2n-2}\left(\frac{r}{\tm}\right)Q_{2n-1}\left(\frac{r}{1-\tp}\right)\rho(\tm,\tp) + \nonumber \\
+  &=& \int_{nr}^{\frac{1}{2}} {\rm d}\tm \int_{\frac{1}{2}}^{\min(\tm+r,1-nr)} {\rm d}\tp Q_{2n-1}\left(\frac{r}{\tm}\right)Q_{2n-1}\left(\frac{r}{1-\tp}\right)\rho(\tm,\tp)
+\end{eqnarray}
+respectively.
 
-\subsection{Wendel's moments}
+Plugging in directly gives us
+\begin{eqnarray}
+  Q_2(r) &=&  2 - \frac{1}{\sqrt{r}} + \frac{2}{\pi}\left[-\frac{2}{\sqrt{r}} \cos^{-1} \sqrt{\frac{r}{1-r}} + \cos^{-1}\frac{r}{1-r} + \frac{1}{r}\sqrt{1-2r}\right] \nonumber
+\end{eqnarray}
+and
+\begin{eqnarray}
+  Q_3(r) &=& \frac{2}{\sqrt{r}} + \frac{1}{\pi}\left[-\frac{3r+1}{r\sqrt{r}} + \frac{8}{r}\sqrt{1-2r}  + 8 \cos^{-1} \frac{r}{1-r} - \frac{16}{\sqrt{r}}\cos^{-1}\frac{1-3r}{1-r}\right] \nonumber
+\end{eqnarray}
+   
+
+\subsection{Comparison with Wendel's moments}
+Wendel~1964 introduced the factorial moment, $M^\star_n(r)$, defined as
+\begin{equation}
+  M^\star_n(r) = \mathbb{E} \left[ {N(r) \choose n} \right]
+\end{equation}
+where $N(r)$ is the number of intervals between zeros of length $>r$. This gives
 \begin{equation}
   M^\star_0(r) = 1
 \end{equation}
-Wendel theorem 5 is
+and by a Laplace transform a recurrence can be found
 \begin{equation}
-  M^\star_{n+1}(r) = \int_0^{1-r} {\rm d}x M^\star_n\left(\frac{r}{x}\right) f^\star_{x+r}(x), \; 0<r<1
+  M^\star_{n+1}(r) = \begin{cases}
+    \int_{nr}^{1-r} {\rm d}x M^\star_n\left(\frac{r}{x}\right) f^\star_{x+r}(x), & 0<r<\frac{1}{n+1}, \\
+    0, & \text{otherwise}
+    \end{cases}
 \end{equation}
-however due to the fact that $M^\star_{n}$ defined to be zero for $rn>1$, the upper limit of $r$ should be $0<r<\frac{1}{n+1}$, and for substitution purposes we should re-label the lower limit of the integral to $nr$, i.e.
+(note the lower limit in Wendel is given as zero rather than $nr$, however $M^\star_n(r)$ zero for $nr < 1$, so this is equivalent), and $f^\star_{x+r}(x)$ given by
 \begin{equation}
-  M^\star_{n+1}(r) = \int_{nr}^{1-r} {\rm d}x M^\star_n\left(\frac{r}{x}\right) f^\star_{x+r}(x), \; 0<r<\frac{1}{n+1}
+  f^\star_{x+r}(x) = \frac{1}{\pi (1-x)} \sqrt{\frac{1-r-x}{rx}} \, .
 \end{equation}
+
 By susbstitution we can easily get the 1st n
 \begin{equation}
   M^\star_1(r) = \frac{1}{\sqrt{r}} - 1
 \end{equation}
-For the second $n$ we get
-\begin{equation}
-  M^\star_2(r) = 1-\frac{2}{\sqrt{r}} - \frac{2}{\pi}\left[\frac{2}{\sqrt{r}} \sin^{-1} \sqrt{\frac{r}{1-r}} - \sin^{-1}\frac{r}{1-r} + \frac{\sqrt{1-2r}}{r}\right]
-\end{equation}
-for $r<1/2$
-
+$M^\star_2$ has not previously been published, however we can substitute to find
+\begin{eqnarray}
+  M^\star_2(r) &=& \frac{2}{\pi}\left[\frac{\sqrt{1-2r}}{r} + \cos^{-1}\frac{r}{1-r}-\frac{2}{\sqrt{r}} \cos^{-1} \sqrt{\frac{r}{1-r}}\right] \nonumber
+\end{eqnarray}
+$M^\star_3$ looks intractable in this form, however we may use the following relationship between the moments and the $Q_n$, that the probability that \emph{all} intervals $<r$ is given by a sum of the moments
+\begin{eqnarray}
+  Q_n(r) &=& \sum_{k=0}^n (-1)^k M^\star_k(r) 
+\end{eqnarray}
+to give
+\begin{eqnarray}
+  M^\star_3(r) &=& \frac{3}{\sqrt{r}} - 1 + \frac{3r+1}{\pi r^{\frac{3}{2}}} - \frac{6}{\pi}\left[\frac{\sqrt{1-2r}}{r} - \sin^{-1}\frac{r}{1-r}  +\frac{2}{\sqrt{r}} \sin^{-1}\sqrt{\frac{r}{1-r}}\right] \nonumber
+\end{eqnarray}
+which can be verified numerically.
 
 \end{document}
