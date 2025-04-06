@@ -1,3 +1,6 @@
+"""
+Copyright (C) 2024 Peter Creasey
+"""
 import numpy as np
 
 n = 500

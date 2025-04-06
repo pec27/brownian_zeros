@@ -1,4 +1,7 @@
-""" Check expressions of Wendel factorial moments """
+""" 
+Check expressions of Wendel factorial moments 
+Copyright (C) 2024 Peter Creasey
+"""
 from numpy import *
 
 def Mn_raw(n, a):

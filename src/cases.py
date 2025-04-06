@@ -1,3 +1,7 @@
+"""
+Copyright (C) 2024 Peter Creasey
+"""
+
 import pylab as pl
 
 pl.rcParams.update({

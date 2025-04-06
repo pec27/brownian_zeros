@@ -1,4 +1,7 @@
-""" Calculations for the CDF of the longest interval between zeros """
+""" 
+Calculations for the CDF of the longest interval between zeros 
+Copyright (C) 2024 Peter Creasey
+"""
 # TODO use sampling formula to make numerical_LR version that is more accurate
 from numpy import *
 
